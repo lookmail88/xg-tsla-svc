@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.0...v0.2.1) (2026-04-02)
+
+
+### Bug Fixes
+
+* spell fix ([b9096b2](https://github.com/lookmail88/xg-tsla-svc/commit/b9096b2deb02d566b45a2a31c95ae784a4a22b0d))
+
 # [0.2.0](https://github.com/lookmail88/xg-tsla-svc/compare/v0.1.0...v0.2.0) (2026-04-02)
 
 
