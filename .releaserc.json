@@ -1,0 +1,20 @@
+{
+  "branches": [
+    {"name": "development", "prerelease": false}],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "mvn versions:set -DnewVersion='${nextRelease.version}' -DgenerateBackupPoms=false && sed -i 's|image: .*:v.*|image: ghcr.io/lookmail88/xg-tlsa-svc:v${nextRelease.version}|g' k8s/dev/deployment.yaml && sed -i 's|image: .*:v.*|image: ghcr.io/lookmail88/xg-tlsa-svc:v${nextRelease.version}|g' k8s/prod/deployment.yaml"
+    }],
+    ["@semantic-release/git", {
+      "assets": ["**/pom.xml",
+                 "CHANGELOG.md",
+                 "k8s/dev/deployment.yaml",
+                 "k8s/prod/deployment.yaml"],
+      "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+    }],
+    "@semantic-release/github"
+  ]
+}

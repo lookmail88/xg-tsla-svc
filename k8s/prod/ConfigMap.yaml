@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xg-tsla-svc-prod-config
+data:
+  application.yml: |-
+    spring:
+      application:
+        name: xg-tsla-svc
+    springdoc:
+      api-docs:
+        enabled: true
+        path: '/v3/api-docs'
+      swagger-ui:
+        url: '/xg-tsla-svc/v3/api-docs'
+        path: '/swagger-ui'
+        config-url: '/xg-tsla-svc/v3/api-docs/swagger-config'
+    openapi:
+      servers:
+        prod: https://api.xuyang.dev/xg-tsla-svc
+    app:
+      env: prod
+    server:
+      servlet:
+        context-path: /xg-tsla-svc
+      forward-headers-strategy: framework

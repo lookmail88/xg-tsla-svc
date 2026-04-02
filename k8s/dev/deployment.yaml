@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xg-tsla-svc
+  namespace: xgao-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xg-tsla-svc
+  template:
+    metadata:
+      labels:
+        app: xg-tsla-svc
+    spec:
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr-login # 👈 刚才你在终端创建的 Secret 名字
+      containers:
+        - name: app
+          image: ghcr.io/lookmail88/xg-tsla-svc:v0.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config/application.yml # 挂载的具体目标路径
+              subPath: application.yml       # 对应 ConfigMap 里的 Key
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 0.5
+              ephemeral-storage: "2Gi"
+            limits:
+              memory: 100Mi
+          # --- 添加以下环境变量配置 ---
+          env:
+            # 1. 强制 Swagger 页面使用 HTTPS 和正确的路径前缀
+            - name: SPRINGDOC_SERVERS[0]_URL
+              value: "https://api-dev.xuyang.dev/xg-tlsa-svc"
+            - name: SPRINGDOC_SERVERS_0_DESCRIPTION
+              value: "Production Gateway"
+            # 2. 确保后端 context-path 与你代码一致
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: "/xg-tlsa-svc"
+            # 3. 开启转发头部识别（双重保险）
+            - name: SERVER_FORWARD_HEADERS_STRATEGY
+              value: "framework"
+            - name: ARGO_API_TOKEN
+              value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJ4dXlhbmctYXBpOmFwaUtleSIsIm5iZiI6MTc3NDgyNDIxMSwiaWF0IjoxNzc0ODI0MjExLCJqdGkiOiI2NmYzZDEzNC1jNDcwLTQwYmItOTVmYi1mZmUyZDVhMmI0MzkifQ.gp-2FeCaPrIcjYZJGAsC1udl20WRyHdTFVbE2hUMZzU"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: xg-tsla-svc-dev-config         # 必须对应上面 ConfigMap 的 metadata.name

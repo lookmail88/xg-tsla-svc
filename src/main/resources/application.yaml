@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: xg-tsla-svc
+  profiles:
+    active: local
+springdoc:
+  api-docs:
+    enabled: true
+    path: '/v3/api-docs'
+  swagger-ui:
+    url: '/xg-tsla-svc/v3/api-docs'
+    path: '/swagger-ui'
+    config-url: '/xg-tsla-svc/v3/api-docs/swagger-config'
+openapi:
+  servers:
+    prod: https://api-dev.xuyang.dev/xg-tsla-svc
+server:
+  servlet:
+    context-path: /xg-tsla-svc
+  forward-headers-strategy: framework
+app:
+  env: dev
