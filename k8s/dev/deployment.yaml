@@ -18,7 +18,7 @@ spec:
         - name: ghcr-login # 👈 刚才你在终端创建的 Secret 名字
       containers:
         - name: app
-          image: ghcr.io/lookmail88/xg-tlsa-svc:v0.2.0
+          image: ghcr.io/lookmail88/xg-tsla-svc:v0.2.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -37,12 +37,12 @@ spec:
           env:
             # 1. 强制 Swagger 页面使用 HTTPS 和正确的路径前缀
             - name: SPRINGDOC_SERVERS[0]_URL
-              value: "https://api-dev.xuyang.dev/xg-tlsa-svc"
+              value: "https://api-dev.xuyang.dev/xg-tsla-svc"
             - name: SPRINGDOC_SERVERS_0_DESCRIPTION
               value: "Production Gateway"
             # 2. 确保后端 context-path 与你代码一致
             - name: SERVER_SERVLET_CONTEXT_PATH
-              value: "/xg-tlsa-svc"
+              value: "/xg-tsla-svc"
             # 3. 开启转发头部识别（双重保险）
             - name: SERVER_FORWARD_HEADERS_STRATEGY
               value: "framework"
