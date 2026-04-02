@@ -1,3 +1,10 @@
+## [0.2.3](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.2...v0.2.3) (2026-04-02)
+
+
+### Bug Fixes
+
+* fix REMOVE INGRESS ([ba73a25](https://github.com/lookmail88/xg-tsla-svc/commit/ba73a255f330ab4d1ac15e5d5e16aaa7ad833df6))
+
 ## [0.2.2](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.1...v0.2.2) (2026-04-02)
 
 
