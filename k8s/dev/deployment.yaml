@@ -28,11 +28,11 @@ spec:
               subPath: application.yml       # 对应 ConfigMap 里的 Key
           resources:
             requests:
-              memory: 100Mi
+              memory: 512Mi
               cpu: 0.5
               ephemeral-storage: "2Gi"
             limits:
-              memory: 100Mi
+              memory: 1024Mi
           # --- 添加以下环境变量配置 ---
           env:
             # 1. 强制 Swagger 页面使用 HTTPS 和正确的路径前缀
