@@ -26,7 +26,7 @@ public class WebController {
 
     @GetMapping(value="/sayhello")
     public ResponseEntity<String> sayHello(){
-        return ResponseEntity.ok("Hello,This is for xg-tsla-svc");
+        return ResponseEntity.ok("Hello,This is for xg-tsla-svc v0.1.0");
     }
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss_SSS");
 
