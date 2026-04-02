@@ -1,3 +1,10 @@
+## [0.2.2](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.1...v0.2.2) (2026-04-02)
+
+
+### Bug Fixes
+
+* fix oomkilled issue ([0333137](https://github.com/lookmail88/xg-tsla-svc/commit/033313700a6e714755442fa6c7f6b46830128965))
+
 ## [0.2.1](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.0...v0.2.1) (2026-04-02)
 
 
