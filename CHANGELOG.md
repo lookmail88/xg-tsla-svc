@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.3...v0.3.0) (2026-04-19)
+
+
+### Features
+
+* adding insert daily price ([e92ba0d](https://github.com/lookmail88/xg-tsla-svc/commit/e92ba0d3b46e4ea74d38173f608c1de578d48e81))
+
 ## [0.2.3](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.2...v0.2.3) (2026-04-02)
 
 
