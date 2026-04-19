@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.0...v0.3.1) (2026-04-19)
+
+
+### Bug Fixes
+
+* remove db settings ([06fb13a](https://github.com/lookmail88/xg-tsla-svc/commit/06fb13acfa2ac12b3796937bcf6c4bf60d9bb175))
+
 # [0.3.0](https://github.com/lookmail88/xg-tsla-svc/compare/v0.2.3...v0.3.0) (2026-04-19)
 
 
