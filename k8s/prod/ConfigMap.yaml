@@ -7,6 +7,19 @@ data:
     spring:
       application:
         name: xg-tsla-svc
+      datasource:
+        url: jdbc:postgresql://timescaledb:5432/${POSTGRES_DB}
+        username: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+        driver-class-name: org.postgresql.Driver
+      jpa:
+        hibernate:
+          ddl-auto: validate
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: false
+        open-in-view: false
     springdoc:
       api-docs:
         enabled: true
@@ -20,6 +33,11 @@ data:
         prod: https://api.xuyang.dev/xg-tsla-svc
     app:
       env: prod
+    massive:
+      api:
+        base-url: https://api.massive.com
+        cron: "0 0 9 * * *"
+        price-cron: "0 * * * * *"
     server:
       servlet:
         context-path: /xg-tsla-svc

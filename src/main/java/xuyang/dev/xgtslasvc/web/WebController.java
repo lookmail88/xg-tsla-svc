@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -18,10 +20,12 @@ public class WebController {
 
     @Value("${app.env}")
     private String apiEnv;
-    private BuildProperties buildProperties;
+    private final BuildProperties buildProperties;
+    private final DataSource dataSource;
 
-    public WebController(BuildProperties buildProperties) {
+    public WebController(BuildProperties buildProperties, DataSource dataSource) {
         this.buildProperties = buildProperties;
+        this.dataSource = dataSource;
     }
 
     @GetMapping(value="/sayhello")
@@ -40,5 +44,25 @@ public class WebController {
     @GetMapping(value = "/version")
     public ResponseEntity<String> getVersion(){
         return ResponseEntity.ok(apiEnv+":"+buildProperties.getVersion());
+    }
+
+    @GetMapping(value = "/db/status")
+    public ResponseEntity<Map<String, String>> getDbStatus() {
+        try (Connection conn = dataSource.getConnection()) {
+            String dbProduct = conn.getMetaData().getDatabaseProductName();
+            String dbVersion = conn.getMetaData().getDatabaseProductVersion();
+            String url = conn.getMetaData().getURL();
+            return ResponseEntity.ok(Map.of(
+                    "status", "connected",
+                    "database", dbProduct,
+                    "version", dbVersion,
+                    "url", url
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of(
+                    "status", "disconnected",
+                    "error", e.getMessage()
+            ));
+        }
     }
 }

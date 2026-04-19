@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class XgTslaSvcApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(XgTslaSvcApplication.class, args);
     }
 

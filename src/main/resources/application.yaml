@@ -3,6 +3,24 @@ spring:
     name: xg-tsla-svc
   profiles:
     active: local
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:30432}/${POSTGRES_DB:tsla_db}
+    username: ${POSTGRES_USER:tsla_user}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+    open-in-view: false
 springdoc:
   api-docs:
     enabled: true
@@ -15,8 +33,20 @@ openapi:
   servers:
     prod: https://api-dev.xuyang.dev/xg-tsla-svc
 server:
+  port: 8080
   servlet:
     context-path: /xg-tsla-svc
   forward-headers-strategy: framework
 app:
-  env: dev
+  env: local
+massive:
+  api:
+    base-url: https://api.massive.com
+    token: ${MASSIVE_API_TOKEN}
+    cron: "0 0 9 * * *"
+    price-cron: "0 * * * * *"
+logging:
+  level:
+    xuyang.dev.xgtslasvc: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.web: INFO
