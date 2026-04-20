@@ -27,10 +27,6 @@ public class PriceController {
         this.priceService = priceService;
     }
 
-    /**
-     * GET /api/v1/price/latest
-     * Returns the most recent TSLA price quotes (default last 60 records).
-     */
     @GetMapping("/latest")
     public ResponseEntity<List<PriceQuote>> getLatestPrices(
             @RequestParam(defaultValue = "60") int limit) {
@@ -42,10 +38,6 @@ public class PriceController {
         return ResponseEntity.ok(prices);
     }
 
-    /**
-     * GET /api/v1/price/today
-     * Returns all TSLA price quotes from the last 24 hours.
-     */
     @GetMapping("/today")
     public ResponseEntity<List<PriceQuote>> getTodayPrices() {
         Instant since = Instant.now().minus(24, ChronoUnit.HOURS);
@@ -54,10 +46,6 @@ public class PriceController {
         return ResponseEntity.ok(prices);
     }
 
-    /**
-     * GET /api/v1/price/fetch
-     * Manually trigger a TSLA price fetch (for testing).
-     */
     @GetMapping("/fetch")
     public ResponseEntity<PriceQuote> fetchNow() {
         PriceQuote quote = priceService.fetchAndSaveTslaPrice();
