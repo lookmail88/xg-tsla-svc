@@ -26,6 +26,11 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
           cache: maven
+      - name: Configure Maven settings
+        run: |
+          mkdir -p ~/.m2
+          cp settings.xml ~/.m2/settings.xml
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
