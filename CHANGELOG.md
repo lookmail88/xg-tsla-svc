@@ -1,3 +1,11 @@
+## [0.3.4](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.3...v0.3.4) (2026-04-21)
+
+
+### Bug Fixes
+
+* add Yahoo finance data src ([de46904](https://github.com/lookmail88/xg-tsla-svc/commit/de469049c7bb266eab097892278bef6918debb3c))
+* fix deploy issue ([f9812d5](https://github.com/lookmail88/xg-tsla-svc/commit/f9812d50a79d7faa4274a338cef7af8bac98d64d))
+
 ## [0.3.3](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.2...v0.3.3) (2026-04-20)
 
 
