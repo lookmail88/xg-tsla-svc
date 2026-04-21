@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.2...v0.3.3) (2026-04-20)
+
+
+### Bug Fixes
+
+* adding UI parts ([d1623e2](https://github.com/lookmail88/xg-tsla-svc/commit/d1623e286ae56cdac9ca1e8344db1087b1d832a2))
+
 ## [0.3.2](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.1...v0.3.2) (2026-04-20)
 
 
