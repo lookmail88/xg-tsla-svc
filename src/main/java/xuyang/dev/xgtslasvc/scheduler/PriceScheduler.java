@@ -22,7 +22,7 @@ public class PriceScheduler {
      * Cron: second=0, every minute, every hour, every day
      * Configurable via massive.api.price-cron property.
      */
-    @Scheduled(cron = "${massive.api.price-cron:0 * * * * *}")
+    @Scheduled(cron = "${massive.api.price-cron:0 15 * * * *}")
     public void fetchTslaPrice() {
         log.info("Fetching TSLA price snapshot");
         try {

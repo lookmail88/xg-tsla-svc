@@ -45,6 +45,10 @@ massive:
     token: ${MASSIVE_API_TOKEN}
     cron: "0 0 9 * * *"
     price-cron: "0 * * * * *"
+yahoo:
+  finance:
+    base-url: https://query1.finance.yahoo.com
+    price-5min-cron: "0 0 * * * MON-FRI"
 logging:
   level:
     xuyang.dev.xgtslasvc: DEBUG
