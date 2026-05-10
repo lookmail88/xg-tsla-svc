@@ -17,7 +17,7 @@ spec:
         - name: ghcr-login # 👈 刚才你在终端创建的 Secret 名字
       containers:
         - name: app
-          image: ghcr.io/lookmail88/xg-tsla-svc:v0.3.4
+          image: ghcr.io/lookmail88/xg-tsla-svc:v0.4.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80

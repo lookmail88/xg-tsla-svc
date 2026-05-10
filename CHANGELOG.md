@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.4...v0.4.0) (2026-05-10)
+
+
+### Features
+
+* add new feature to have the report from local AI ([8e7b1e6](https://github.com/lookmail88/xg-tsla-svc/commit/8e7b1e69bb3f7fb23fdbc403455c0e17c7324ff5))
+
 ## [0.3.4](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.3...v0.3.4) (2026-04-21)
 
 
