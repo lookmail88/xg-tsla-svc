@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.1...v0.4.2) (2026-05-10)
+
+
+### Bug Fixes
+
+* adjust report method name and config ([0ac77c7](https://github.com/lookmail88/xg-tsla-svc/commit/0ac77c7068ad860c6e69d069d156f1590093dd65))
+
 ## [0.4.1](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.0...v0.4.1) (2026-05-10)
 
 
