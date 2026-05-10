@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.0...v0.4.1) (2026-05-10)
+
+
+### Bug Fixes
+
+* add swagger config ([b692f63](https://github.com/lookmail88/xg-tsla-svc/commit/b692f631986fb6cb400c7bf9505fd9be7057b6d5))
+
 # [0.4.0](https://github.com/lookmail88/xg-tsla-svc/compare/v0.3.4...v0.4.0) (2026-05-10)
 
 
