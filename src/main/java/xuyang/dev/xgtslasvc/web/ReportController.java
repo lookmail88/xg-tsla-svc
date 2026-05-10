@@ -16,12 +16,12 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping(value = "/generateNewReport")
+    @PostMapping (value = "/report/generateNew")
     public ResponseEntity<Map<String, Object>> generateNewReport() {
         return ResponseEntity.ok(reportService.generateNewReport("TSLA"));
     }
 
-    @GetMapping(value = "/report/getLatestReport")
+    @GetMapping(value = "/report/getLatest")
     public ResponseEntity<Map<String, Object>> getLatestReport() {
         return ResponseEntity.ok(reportService.getLatestSavedReport("TSLA"));
     }
