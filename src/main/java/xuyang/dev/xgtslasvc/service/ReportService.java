@@ -55,7 +55,13 @@ public class ReportService {
         this.metricsRepository = metricsRepository;
     }
 
-    public Map<String, Object> getLatestReport(String ticker) {
+    public Map<String, Object> getLatestSavedReport(String ticker) {
+        return reportRepository.findFirstBySymbolOrderByReportTimestampDesc(ticker.toUpperCase())
+                .map(this::toMap)
+                .orElse(Map.of("status", "not_found", "ticker", ticker));
+    }
+
+    public Map<String, Object> generateNewReport(String ticker) {
         try {
             List<PriceQuote> dailyPrices = priceQuoteRepository
                     .findBySymbolOrderByTimestampDesc(ticker)

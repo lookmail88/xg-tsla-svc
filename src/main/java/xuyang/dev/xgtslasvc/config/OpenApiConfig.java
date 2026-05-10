@@ -18,7 +18,8 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .servers(List.of(
-                        new Server().url(prodUrl).description("production API gateway")
+                        new Server().url(prodUrl).description("production API gateway"),
+                        new Server().url("http://localhost:8080/xg-tsla-svc/").description("local API gateway")
                 ));
     }
 
