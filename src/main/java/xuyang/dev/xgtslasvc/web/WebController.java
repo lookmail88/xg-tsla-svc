@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xuyang.dev.xgtslasvc.service.ReportService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,6 +14,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -22,10 +24,13 @@ public class WebController {
     private String apiEnv;
     private final BuildProperties buildProperties;
     private final DataSource dataSource;
+    private final ReportService reportService;
 
-    public WebController(BuildProperties buildProperties, DataSource dataSource) {
-        this.buildProperties = buildProperties;
+    public WebController(Optional<BuildProperties> buildProperties, DataSource dataSource,
+                         ReportService reportService) {
+        this.buildProperties = buildProperties.orElse(null);
         this.dataSource = dataSource;
+        this.reportService = reportService;
     }
 
     @GetMapping(value="/sayhello")
@@ -43,7 +48,8 @@ public class WebController {
 
     @GetMapping(value = "/version")
     public ResponseEntity<String> getVersion(){
-        return ResponseEntity.ok(apiEnv+":"+buildProperties.getVersion());
+        String version = buildProperties != null ? buildProperties.getVersion() : "unknown";
+        return ResponseEntity.ok(apiEnv + ":" + version);
     }
 
     @GetMapping(value = "/db/status")

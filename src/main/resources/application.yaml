@@ -3,6 +3,8 @@ spring:
     name: xg-tsla-svc
   profiles:
     active: local
+  config:
+    import: classpath:ollama-prompts.yaml
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:30432}/${POSTGRES_DB:tsla_db}
     username: ${POSTGRES_USER:tsla_user}
@@ -26,9 +28,8 @@ springdoc:
     enabled: true
     path: '/v3/api-docs'
   swagger-ui:
-    url: '/xg-tsla-svc/v3/api-docs'
     path: '/swagger-ui'
-    config-url: '/xg-tsla-svc/v3/api-docs/swagger-config'
+  packages-to-scan: xuyang.dev.xgtslasvc.web
 openapi:
   servers:
     prod: https://api-dev.xuyang.dev/xg-tsla-svc
@@ -49,6 +50,9 @@ yahoo:
   finance:
     base-url: https://query1.finance.yahoo.com
     price-5min-cron: "0 0 * * * MON-FRI"
+ollama:
+  base-url: http://192.168.1.82:11434
+  model: gemma4:26b
 logging:
   level:
     xuyang.dev.xgtslasvc: DEBUG

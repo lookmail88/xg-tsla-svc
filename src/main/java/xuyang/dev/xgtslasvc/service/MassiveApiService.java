@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import xuyang.dev.xgtslasvc.dto.PolygonFinancialsResponse;
 import xuyang.dev.xgtslasvc.dto.PolygonPrevDayResponse;
 
 @Service
@@ -45,5 +46,13 @@ public class MassiveApiService {
                 .uri("/v2/aggs/ticker/{ticker}/prev", ticker)
                 .retrieve()
                 .body(PolygonPrevDayResponse.class);
+    }
+
+    public PolygonFinancialsResponse fetchLatestFinancials(String ticker) {
+        log.debug("Calling GET /vX/reference/financials?ticker={}&limit=1", ticker);
+        return restClient.get()
+                .uri("/vX/reference/financials?ticker={ticker}&limit=1&sort=period_of_report_date&order=desc", ticker)
+                .retrieve()
+                .body(PolygonFinancialsResponse.class);
     }
 }

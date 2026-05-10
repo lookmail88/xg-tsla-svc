@@ -27,8 +27,17 @@ target/
 hs_err_pid*
 replay_pid*
 
+# UI build artifacts
+ui/node_modules/
+ui/dist/
+
 # Kubernetes Secrets — never commit
 k8s/**/secret-*.yaml
+
+# VS Code / code-server local env (keep .env.example tracked, real .env ignored)
+.vscode/.env
+.vscode/*.env
+!.vscode/.env.example
 
 ### Example user template template
 ### Example user template

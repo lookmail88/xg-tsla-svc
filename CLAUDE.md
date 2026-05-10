@@ -3,20 +3,21 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Build & Run Commands
-
-```bash
-# Build (skip tests — there are no tests currently)
-mvn clean package -Dmaven.test.skip=true
-
-# Build with tests (when tests exist)
-mvn clean package
-
-# Get current version
-mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-
-# Bump version
-mvn versions:set -DnewVersion='<version>' -DgenerateBackupPoms=false
-```
+### Commands
+| Task              | Command                                   |
+| ----------------- |-------------------------------------------|
+| Build             | `./mvnw clean package  `                  |
+| Build (skip tests)| `./mvnw clean package -DskipTests`        |
+| Run tests         | `./mvnw test`                             |
+| Run single test   | `./mvnw test -Dtest=<ClassName>`          |
+| Run single method | `./mvnw test -Dtest=<ClassName>#<method>` |
+| Run locally       | `./mvnw spring-boot:run`                  |
+| Format            | `./mvnw spotless:apply`                   |
+| Lint check        | `./mvnw verify`                           |
+| Build container   | `./mvnw spring-boot:build-image`          |
+| Dependency check  | `./mvnw dependency-check:check`           |
+| Show dep tree     | `./mvnw dependency:tree`                  |
+Always run `./mvnw verify` before declaring a task done.
 
 ## Architecture
 
