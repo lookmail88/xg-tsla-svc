@@ -1,3 +1,10 @@
+## [0.4.3](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.2...v0.4.3) (2026-05-10)
+
+
+### Bug Fixes
+
+* adjust endpoint name ([291db03](https://github.com/lookmail88/xg-tsla-svc/commit/291db03d53d31208be76b4e2679436aeedbec520))
+
 ## [0.4.2](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.1...v0.4.2) (2026-05-10)
 
 
