@@ -30,7 +30,7 @@ public class OllamaService {
         log.info("OllamaService initialized model={} baseUrl={}", model, baseUrl);
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(Duration.ofSeconds(10));
-        factory.setReadTimeout(Duration.ofSeconds(120));
+        factory.setReadTimeout(Duration.ofMinutes(10));
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .requestFactory(factory)

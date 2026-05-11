@@ -7,6 +7,8 @@ data:
     spring:
       application:
         name: xg-tsla-svc
+        config:
+          import: classpath:ollama-prompts.yaml  
       datasource:
         url: jdbc:postgresql://timescaledb:5432/${POSTGRES_DB}
         username: ${POSTGRES_USER}
@@ -38,6 +40,18 @@ data:
         base-url: https://api.massive.com
         cron: "0 0 9 * * *"
         price-cron: "0 * * * * *"
+    yahoo:
+      finance:
+        base-url: https://query1.finance.yahoo.com
+        price-5min-cron: "0 0 * * * MON-FRI"
+    ollama:
+      base-url: http://192.168.1.82:11434
+      model: gemma4:26b
+    logging:
+      level:
+        xuyang.dev.xgtslasvc: DEBUG
+        org.hibernate.SQL: DEBUG
+        org.springframework.web: INFO    
     server:
       servlet:
         context-path: /xg-tsla-svc

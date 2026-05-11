@@ -16,10 +16,13 @@ import xuyang.dev.xgtslasvc.repository.PriceQuoteRepository;
 import xuyang.dev.xgtslasvc.repository.StockAnalysisReportRepository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +36,15 @@ public class ReportService {
             DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(LA);
     private static final DateTimeFormatter DATETIME_FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(LA);
+    // Lenient JSON parser — LLMs occasionally emit single quotes, unquoted keys,
+    // trailing commas, or // comments. We accept all of them rather than fail the request.
     private static final JsonMapper OBJECT_MAPPER = JsonMapper.builder()
             .enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS)
+            .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+            .enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
+            .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
+            .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+            .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS)
             .build();
 
     private final OllamaService ollamaService;
@@ -102,34 +112,122 @@ public class ReportService {
     private String buildPrompt(String ticker, List<PriceQuote> dailyPrices, List<PriceQuote5Min> prices5Min) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Recent %s daily prices (newest first):%n".formatted(ticker));
+        // dailyPrices arrives newest-first from the repository; present chronologically
+        // (oldest-first) so the model reads price action left-to-right like a chart.
+        List<PriceQuote> dailyAsc = new ArrayList<>(dailyPrices);
+        Collections.reverse(dailyAsc);
+
+        PriceQuote latest = dailyPrices.get(0);
+        PriceQuote prior = dailyPrices.size() > 1 ? dailyPrices.get(1) : null;
+
+        sb.append("=== Analysis Context ===%n".formatted());
+        sb.append("Ticker:           %s%n".formatted(ticker));
+        sb.append("As-of date:       %s (America/Los_Angeles)%n".formatted(DATE_FMT.format(latest.getTimestamp())));
+        sb.append("Latest close:     %s%n".formatted(latest.getClose()));
+        sb.append("Latest intraday:  low %s / high %s%n".formatted(latest.getLow(), latest.getHigh()));
+        sb.append("Latest volume:    %d%n".formatted(latest.getVolume()));
+        if (prior != null && prior.getClose() != null
+                && latest.getClose() != null && prior.getClose().signum() != 0) {
+            BigDecimal pct = latest.getClose().subtract(prior.getClose())
+                    .divide(prior.getClose(), 4, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(100))
+                    .setScale(2, RoundingMode.HALF_UP);
+            sb.append("Day %% change:     %s%%%n".formatted(pct.toPlainString()));
+        }
+        sb.append("Daily bars:       %d sessions provided%n".formatted(dailyAsc.size()));
+        sb.append("Intraday bars:    %d five-minute bars over the last 5 trading days%n".formatted(prices5Min.size()));
+        sb.append("%n");
+
+        sb.append("=== Daily OHLCV — last %d sessions (oldest first) ===%n".formatted(dailyAsc.size()));
         sb.append("Date         | Open     | High     | Low      | Close    | Volume      | VWAP%n");
-        for (PriceQuote q : dailyPrices) {
+        for (PriceQuote q : dailyAsc) {
             sb.append("%-12s | %-8s | %-8s | %-8s | %-8s | %-11d | %s%n".formatted(
                     DATE_FMT.format(q.getTimestamp()),
                     q.getOpen(), q.getHigh(), q.getLow(), q.getClose(),
                     q.getVolume(), q.getVwap()));
         }
 
-        sb.append("%nRecent %s 5-minute prices — last 10 days (oldest first):%n".formatted(ticker));
-        sb.append("Datetime          | Open     | High     | Low      | Close    | Volume%n");
-        for (PriceQuote5Min q : prices5Min) {
-            sb.append("%-17s | %-8s | %-8s | %-8s | %-8s | %d%n".formatted(
-                    DATETIME_FMT.format(q.getTimestamp()),
-                    q.getOpen(), q.getHigh(), q.getLow(), q.getClose(),
-                    q.getVolume()));
+        sb.append("%n=== Intraday 5-minute OHLCV — last 5 trading days (oldest first) ===%n".formatted());
+        if (prices5Min.isEmpty()) {
+            sb.append("(no 5-minute data available — base intraday observations on the daily bars)%n".formatted());
+        } else {
+            sb.append("Datetime          | Open     | High     | Low      | Close    | Volume%n");
+            for (PriceQuote5Min q : prices5Min) {
+                sb.append("%-17s | %-8s | %-8s | %-8s | %-8s | %d%n".formatted(
+                        DATETIME_FMT.format(q.getTimestamp()),
+                        q.getOpen(), q.getHigh(), q.getLow(), q.getClose(),
+                        q.getVolume()));
+            }
         }
+
+        sb.append("%n=== Task ===%n".formatted());
+        sb.append("Produce a single valid JSON object that exactly matches the schema in the system prompt.%n".formatted());
+        sb.append("Use the daily bars for trend, moving-average alignment, momentum (RSI/MACD), and volume regime;%n".formatted());
+        sb.append("use the 5-minute bars for intraday confirmation, short-term volatility, and the latest price action.%n".formatted());
+        sb.append("Anchor support_level_primary/secondary and resistance_level_primary/secondary to actual swing lows and highs visible in the data above.%n".formatted());
+        sb.append("All bilingual fields must follow the format \"<Chinese> | <English>\" defined in the system prompt.%n".formatted());
+        sb.append("Return JSON only — no markdown fences, no commentary, no trailing text.%n".formatted());
 
         return sb.toString();
     }
 
-    private JsonNode parseJson(String raw) throws Exception {
-        // strip markdown code fences if present
-        String cleaned = raw.strip();
-        if (cleaned.startsWith("```")) {
-            cleaned = cleaned.replaceFirst("```(?:json)?\\s*", "").replaceFirst("```\\s*$", "").strip();
+    /**
+     * Parses the model's raw response into JSON. Robust to common LLM output quirks:
+     * markdown code fences, narrative preamble/postamble, and the lenient features
+     * enabled on OBJECT_MAPPER (single quotes, unquoted keys, trailing commas, comments).
+     */
+    JsonNode parseJson(String raw) throws Exception {
+        if (raw == null) throw new IllegalArgumentException("raw response is null");
+        String cleaned = stripFences(raw.strip());
+        String jsonObject = extractFirstJsonObject(cleaned);
+        if (jsonObject == null) {
+            log.error("Could not locate a JSON object in the model response. Raw (truncated): {}",
+                    raw.substring(0, Math.min(raw.length(), 2000)));
+            throw new IllegalStateException("Model response did not contain a JSON object");
         }
-        return OBJECT_MAPPER.readTree(cleaned);
+        try {
+            return OBJECT_MAPPER.readTree(jsonObject);
+        } catch (Exception e) {
+            log.error("Failed to parse extracted JSON. Extracted (truncated): {} | Raw (truncated): {}",
+                    jsonObject.substring(0, Math.min(jsonObject.length(), 2000)),
+                    raw.substring(0, Math.min(raw.length(), 2000)));
+            throw e;
+        }
+    }
+
+    /** Strip all ```...``` code-fence markers (including the language hint), wherever they appear. */
+    private static String stripFences(String s) {
+        String out = s;
+        // Leading fence with optional language hint, e.g. ```json
+        out = out.replaceFirst("^```(?:json|JSON)?\\s*\\R?", "");
+        // Trailing fence
+        out = out.replaceFirst("\\R?```\\s*$", "");
+        return out.strip();
+    }
+
+    /**
+     * Returns the substring starting at the first '{' and ending at the matching '}',
+     * respecting string literals and escape sequences. Returns null if no balanced object exists.
+     */
+    static String extractFirstJsonObject(String s) {
+        int start = s.indexOf('{');
+        if (start < 0) return null;
+        int depth = 0;
+        boolean inString = false;
+        boolean escape = false;
+        for (int i = start; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (escape) { escape = false; continue; }
+            if (c == '\\' && inString) { escape = true; continue; }
+            if (c == '"') { inString = !inString; continue; }
+            if (inString) continue;
+            if (c == '{') depth++;
+            else if (c == '}') {
+                depth--;
+                if (depth == 0) return s.substring(start, i + 1);
+            }
+        }
+        return null;
     }
 
     private StockAnalysisReport buildReport(String ticker, JsonNode j) {
