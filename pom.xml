@@ -10,7 +10,7 @@
     </parent>
     <groupId>xuyang.dev</groupId>
     <artifactId>xg-tsla-svc</artifactId>
-    <version>0.4.5</version>
+    <version>0.4.6</version>
     <name>xg-tsla-svc</name>
     <description>xg-tsla-svc</description>
     <url/>
