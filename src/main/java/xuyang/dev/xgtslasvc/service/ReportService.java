@@ -82,7 +82,7 @@ public class ReportService {
                 return Map.of("status", "no_price_data", "ticker", ticker);
             }
 
-            Instant tenDaysAgo = Instant.now().minus(5, ChronoUnit.DAYS);
+            Instant tenDaysAgo = Instant.now().minus(1, ChronoUnit.DAYS);
             List<PriceQuote5Min> prices5Min = priceQuote5MinRepository
                     .findBySymbolAndTimestampBetweenOrderByTimestampAsc(ticker, tenDaysAgo, Instant.now());
 
@@ -120,12 +120,12 @@ public class ReportService {
         PriceQuote latest = dailyPrices.get(0);
         PriceQuote prior = dailyPrices.size() > 1 ? dailyPrices.get(1) : null;
 
-        sb.append("=== Analysis Context ===%n".formatted());
-        sb.append("Ticker:           %s%n".formatted(ticker));
-        sb.append("As-of date:       %s (America/Los_Angeles)%n".formatted(DATE_FMT.format(latest.getTimestamp())));
-        sb.append("Latest close:     %s%n".formatted(latest.getClose()));
-        sb.append("Latest intraday:  low %s / high %s%n".formatted(latest.getLow(), latest.getHigh()));
-        sb.append("Latest volume:    %d%n".formatted(latest.getVolume()));
+//        sb.append("=== Analysis Context ===%n".formatted());
+//        sb.append("Ticker:           %s%n".formatted(ticker));
+//        sb.append("As-of date:       %s (America/Los_Angeles)%n".formatted(DATE_FMT.format(latest.getTimestamp())));
+//        sb.append("Latest close:     %s%n".formatted(latest.getClose()));
+//        sb.append("Latest intraday:  low %s / high %s%n".formatted(latest.getLow(), latest.getHigh()));
+//        sb.append("Latest volume:    %d%n".formatted(latest.getVolume()));
         if (prior != null && prior.getClose() != null
                 && latest.getClose() != null && prior.getClose().signum() != 0) {
             BigDecimal pct = latest.getClose().subtract(prior.getClose())
@@ -160,20 +160,20 @@ public class ReportService {
             }
         }
 
-        sb.append("%n=== Task ===%n".formatted());
-        sb.append("Produce a single valid JSON object that exactly matches the schema in the system prompt.%n".formatted());
-        sb.append("Use the daily bars for trend, moving-average alignment, momentum (RSI/MACD), and volume regime;%n".formatted());
-        sb.append("use the 5-minute bars for intraday confirmation, short-term volatility, and the latest price action.%n".formatted());
-        sb.append("Anchor support_level_primary/secondary and resistance_level_primary/secondary to actual swing lows and highs visible in the data above.%n".formatted());
-        sb.append("All bilingual fields must follow the format \"<Chinese> | <English>\" defined in the system prompt.%n".formatted());
-        sb.append("Return JSON only — no markdown fences, no commentary, no trailing text.%n".formatted());
+//        sb.append("%n=== Task ===%n".formatted());
+//        sb.append("Produce a single valid JSON object that exactly matches the schema in the system prompt.%n".formatted());
+//        sb.append("Use the daily bars for trend, moving-average alignment, momentum (RSI/MACD), and volume regime;%n".formatted());
+//        sb.append("use the 5-minute bars for intraday confirmation, short-term volatility, and the latest price action.%n".formatted());
+//        sb.append("Anchor support_level_primary/secondary and resistance_level_primary/secondary to actual swing lows and highs visible in the data above.%n".formatted());
+//        sb.append("All bilingual fields must follow the format \"<Chinese> | <English>\" defined in the system prompt.%n".formatted());
+//        sb.append("Return JSON only — no markdown fences, no commentary, no trailing text.%n".formatted());
 
         return sb.toString();
     }
 
     /**
      * Parses the model's raw response into JSON. Robust to common LLM output quirks:
-     * markdown code fences, narrative preamble/postamble, and the lenient features
+     * Markdown code fences, narrative preamble/postamble, and the lenient features
      * enabled on OBJECT_MAPPER (single quotes, unquoted keys, trailing commas, comments).
      */
     JsonNode parseJson(String raw) throws Exception {

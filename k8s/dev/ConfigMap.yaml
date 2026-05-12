@@ -46,7 +46,7 @@ data:
         price-5min-cron: "0 0 * * * MON-FRI"
     ollama:
       base-url: http://192.168.1.82:11434
-      model: gemma4:26b
+      model: gemma4:latest
     logging:
       level:
         xuyang.dev.xgtslasvc: DEBUG

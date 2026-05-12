@@ -16,23 +16,7 @@ ollama:
       - Format: "<Chinese> | <English>" — Chinese first, a single ASCII pipe surrounded by single spaces, then English.
       - The Chinese portion MUST contain at least one CJK character (Unicode range U+4E00–U+9FFF).
       - The English portion MUST contain at least three ASCII letters.
-      - Neither side may be a transliteration, pinyin, or a placeholder like "N/A", "—", "中文", or "English".
       - JSON keys, numbers, and enum tokens are written in English only; bilingual rule applies ONLY to the natural-language value strings.
-
-    Bilingual enum mapping (MUST use these exact bilingual strings as the field VALUE for the listed fields):
-      trend_sentiment:
-        Bullish  -> "看涨 | Bullish"
-        Neutral  -> "中性 | Neutral"
-        Bearish  -> "看跌 | Bearish"
-      risk_level:
-        Low      -> "低 | Low"
-        Medium   -> "中 | Medium"
-        High     -> "高 | High"
-        Extreme  -> "极高 | Extreme"
-
-    Professional Chinese finance vocabulary to use in the Chinese portion:
-      多头/空头/震荡, 突破/跌破, 支撑/压力, 量价齐升/量价背离, 顶背离/底背离, 超买/超卖,
-      止损/止盈, 移动平均线 (MA), 相对强弱指数 (RSI), 异同移动平均线 (MACD), 平均真实波幅 (ATR).
 
     Self-validation before returning (the model MUST perform this check):
       1. For each of trend_sentiment, summary_conclusion, detailed_analysis, volume_observation, price_action_observation, risk_level:
@@ -63,7 +47,7 @@ ollama:
       - trend_sentiment: derive from the alignment and slope of the 20/50/200-day simple moving averages and the sequence of higher-highs / higher-lows (or lower-highs / lower-lows). Use Neutral only when price is range-bound or moving averages are intertwined.
       - support_level_primary / secondary: anchored at the nearest swing lows, prior consolidation zones, or high-volume nodes below the last close; primary is closest in price.
       - resistance_level_primary / secondary: anchored at the nearest swing highs, supply zones, or high-volume nodes above the last close; primary is closest in price.
-      - detailed_analysis: must explicitly cover (1) price-volume relationship and confirmation/divergence; (2) 5-day, 25-day, and 60-day volume moving-average comparison; (3) momentum read from RSI, MACD, and any divergences; (4) volatility regime (expanding vs. contracting ATR/Bollinger bandwidth); (5) the precise invalidation level that would flip the thesis.
+      - detailed_analysis: must include chinese and english, must explicitly cover (1) price-volume relationship and confirmation/divergence; (2) 5-day, 25-day, and 60-day volume moving-average comparison; (3) momentum read from RSI, MACD, and any divergences; (4) volatility regime (expanding vs. contracting ATR/Bollinger bandwidth); (5) the precise invalidation level that would flip the thesis.
       - summary_conclusion: must include a hard stop-loss (price level + rationale, e.g., 1.5x ATR below entry or below primary support), a take-profit target (prior resistance, measured-move projection, or R-multiple), the resulting risk:reward ratio (target ≥ 2.0R for new entries), and an explicit position-management call (Add / Hold / Trim / Exit).
       - risk_level: a composite of realized volatility, proximity to primary support, and trend integrity. Low = trending with contracting volatility; Medium = trending with elevated volatility; High = late-stage trend, extreme RSI, or weakening volume; Extreme = breakdown of primary support with expanding ATR or a confirmed lower-low on rising volume.
       - risk_value: 14-period RSI on daily closes; flag overbought (>70), oversold (<30), and any bullish/bearish divergence inside detailed_analysis.
