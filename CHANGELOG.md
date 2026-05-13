@@ -1,3 +1,10 @@
+## [0.4.8](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.7...v0.4.8) (2026-05-13)
+
+
+### Bug Fixes
+
+* update prompt, adding both chinese and english ([9c90ae8](https://github.com/lookmail88/xg-tsla-svc/commit/9c90ae8435102e3b6bb05ada6c0b19ad0ede234c))
+
 ## [0.4.7](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.6...v0.4.7) (2026-05-12)
 
 
