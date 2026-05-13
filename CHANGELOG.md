@@ -1,3 +1,10 @@
+## [0.4.7](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.6...v0.4.7) (2026-05-12)
+
+
+### Bug Fixes
+
+* update prompt2 ([10e5c2a](https://github.com/lookmail88/xg-tsla-svc/commit/10e5c2aa977ae9f1f8d07c90d3eb566bcdeb4b3b))
+
 ## [0.4.6](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.5...v0.4.6) (2026-05-12)
 
 
