@@ -63,7 +63,7 @@ ollama:
     Price levels: two decimal places, in the instrument's quote currency.
 
     {
-      "trend_sentiment":              <bilingual enum — see ENUMS>,
+      "trend_sentiment":              <bilingual string — see LANGUAGE RULE>,
       "summary_conclusion":           <bilingual string>,
       "support_level_primary":        <number>,
       "support_level_secondary":      <number>,
@@ -75,12 +75,12 @@ ollama:
       "opening_range_high":           <number>,
       "opening_range_low":            <number>,
       "gap_pct":                      <number>,
-      "intraday_trend_alignment":     <bilingual enum — see ENUMS>,
+      "intraday_trend_alignment":     <bilingual string — see LANGUAGE RULE>,
       "detailed_analysis":            <bilingual string>,
       "volume_observation":           <bilingual string>,
       "price_action_observation":     <bilingual string>,
       "intraday_observation":         <bilingual string>,
-      "risk_level":                   <bilingual enum — see ENUMS>,
+      "risk_level":                   <bilingual string — see LANGUAGE RULE>,
       "risk_value":                   <number>,
       "macd_line":                    <number>,
       "macd_signal_line":             <number>,
@@ -89,50 +89,71 @@ ollama:
       "price_volatility_stddev":      <number>
     }
 
-    ## BILINGUAL STRING RULE
-    Every natural-language string value must follow this format exactly:
-      "Simplified Chinese | English"
+    ## LANGUAGE RULE
+    Every bilingual string field must contain BOTH languages in the SAME value,
+    separated by a single newline character (\n).
+    Format:
+      Line 1: Simplified Chinese
+      Line 2: English
 
     Rules:
-      - Chinese first, one ASCII pipe ( | ) with exactly one space on each side, then English
-      - Chinese portion: at least one CJK character (U+4E00–U+9FFF)
-      - English portion: at least three ASCII letters
-      - JSON keys, numbers, and enum tokens are English only
+      - Chinese line must contain at least one CJK character (U+4E00–U+9FFF)
+      - English line must contain at least three ASCII letters
+      - No pipe characters, no language labels, no extra blank lines between the two lines
+      - JSON keys and numeric fields are English only and are not subject to this rule
 
-    Correct example:
-      "intraday_observation": "股价收盘于VWAP上方，开盘区间突破确认日内买盘主导 | Price closed above VWAP; opening range breakout confirms intraday buying pressure — optimal entry zone on a VWAP retest."
+    For multi-sentence fields (detailed_analysis): write the full Chinese block first,
+    then \n, then the full English block. Do not interleave paragraph by paragraph.
+
+    Correct examples:
+
+      Single-sentence field:
+        "volume_observation": "成交量较20日均量高出35.7%，显示主力资金积极吸筹\nVolume is 35.7% above its 20-day average, signaling institutional accumulation."
+
+       Enum field:
+        "trend_sentiment": "看涨\nBullish"
+
+      Multi-paragraph field:
+        "detailed_analysis": "第一段：趋势结构分析...\n第二段：量价关系...\n第三段：动量与风险...\nParagraph 1: Trend structure analysis...\nParagraph 2: Price-volume relationship...\nParagraph 3: Momentum and risk..."
 
     Wrong examples:
-      "Price closed above VWAP."  ← missing Chinese
-      "股价收盘于VWAP上方"          ← missing English
-      "股价|Price"                 ← no spaces around pipe
+      "看涨 | Bullish"           ← pipe separator not allowed
+      "Bullish\n看涨"            ← English before Chinese
+      "看涨"                     ← missing English
+      "Bullish"                  ← missing Chinese
 
     ## ENUMS
-    Use the exact string shown — Chinese portion is required.
+    Use the exact strings shown. Chinese line first, English line second, separated by \n.
 
-    trend_sentiment — pick exactly one:
-      "看涨 | Bullish"
-      "中性 | Neutral"
-      "看空 | Bearish"
+    trend_sentiment — pick exactly one pair:
+      "看涨\nBullish"
+      "中性\nNeutral"
+      "看空\nBearish"
 
-    intraday_trend_alignment — pick exactly one:
-      "日内走势与日线趋势一致 | Intraday Aligned with Daily Bias"
-      "日内走势与日线趋势背离 | Intraday Diverging from Daily Bias"
-      "日内走势中性 | Intraday Neutral"
+    intraday_trend_alignment — pick exactly one pair:
+      "日内走势与日线趋势一致\nIntraday Aligned with Daily Bias"
+      "日内走势与日线趋势背离\nIntraday Diverging from Daily Bias"
+      "日内走势中性\nIntraday Neutral"
 
-    risk_level — pick exactly one:
-      "低风险 | Low"       — daily trend intact, contracting volatility, intraday aligned
-      "中等风险 | Medium"  — daily trend intact, elevated volatility or intraday neutral
-      "高风险 | High"      — late-stage trend, extreme RSI, weakening volume, or intraday diverging
-      "极端风险 | Extreme" — primary-support breakdown with expanding ATR, confirmed lower-low
-                            on rising volume, or severe intraday-to-daily divergence
+    risk_level — pick exactly one pair:
+      "低风险\nLow"
+      "中等风险\nMedium"
+      "高风险\nHigh"
+      "极端风险\nExtreme"
+
+    Risk level conditions:
+      低风险 / Low      — daily trend intact, contracting volatility, intraday aligned
+      中等风险 / Medium  — daily trend intact, elevated volatility or intraday neutral
+      高风险 / High     — late-stage trend, extreme RSI, weakening volume, or intraday diverging
+      极端风险 / Extreme — primary-support breakdown with expanding ATR, confirmed lower-low
+                          on rising volume, or severe intraday-to-daily divergence
 
     ## FIELD GUIDANCE
 
     trend_sentiment
       Derive from 20/50/200-day SMA alignment and slope, and the sequence of
       higher-highs/higher-lows or lower-highs/lower-lows on the daily chart.
-      Use Neutral only when price is range-bound or MAs are intertwined.
+      Use 中性 / Neutral only when price is range-bound or MAs are intertwined.
 
     support_level_primary / secondary
       Anchored at nearest daily swing lows, prior consolidation zones, or high-volume
@@ -162,7 +183,7 @@ ollama:
       position at close confirm or contradict daily trend_sentiment.
       Divergence = caution. Alignment = higher conviction for new entries.
 
-    summary_conclusion — one bilingual sentence containing all of:
+    summary_conclusion — one sentence per language, containing all of:
       - Directional bias and trade thesis
       - Hard stop-loss: price level + rationale
         (e.g., 1.5× ATR below entry, below primary support, or below VWAP lower-1σ)
@@ -172,7 +193,8 @@ ollama:
         (e.g., "entry on VWAP reclaim" or "entry on opening-range breakout above X.XX")
       - Position call: Add / Hold / Trim / Exit
 
-    detailed_analysis — 2–3 bilingual paragraphs covering all six points:
+    detailed_analysis — 2–3 paragraphs per language (Chinese block first, then English block).
+    Must cover all six points:
       1. Trend structure: 20/50/200-day SMA slope and alignment; HH/HL or LH/LL sequence
       2. Price-volume: confirmation or divergence; compare 5-day, 25-day, 60-day volume
          MAs; accumulation or distribution character
@@ -184,14 +206,14 @@ ollama:
          VWAP position, and opening range outcome confirm or undermine the daily thesis?
       6. Invalidation: precise price level citing the daily or intraday structure that anchors it
 
-    volume_observation — one bilingual sentence:
+    volume_observation — one sentence per language:
       Latest daily volume vs. 20-day volume SMA (percent difference) and any
       accumulation or distribution signal.
 
-    price_action_observation — one bilingual sentence:
+    price_action_observation — one sentence per language:
       Daily candlestick pattern, breakout/breakdown, or notable daily swing structure.
 
-    intraday_observation — one bilingual sentence:
+    intraday_observation — one sentence per language:
       VWAP position at session close, opening range outcome (inside / breakout /
       breakdown), gap-fill or continuation behavior, and the resulting optimal entry
       zone or caution flag for the next session.
@@ -213,26 +235,11 @@ ollama:
       stddev of daily log returns over the most recent 20 sessions × sqrt(252).
 
     ## STEP 3 — SELF-VALIDATION (perform before emitting JSON)
-    For every bilingual string field listed below, verify ALL three conditions.
-    If any check fails, regenerate that field. Do not emit JSON until all pass.
+    Do not emit JSON until all checks pass. If a check fails, regenerate that field.
 
-    Fields to check:
-      trend_sentiment, summary_conclusion, detailed_analysis, volume_observation,
-      price_action_observation, intraday_observation, intraday_trend_alignment, risk_level
-
-    Checks:
-      ✓ Value contains the substring " | "  (space-pipe-space)
-      ✓ Value contains at least one CJK character (U+4E00–U+9FFF)
-      ✓ Value contains at least three ASCII letters
-
-    ## OUTPUT DISCIPLINE
-    - Response = one JSON object only — starts with { and ends with }. Nothing else.
-    - If data is insufficient: populate every field, raise risk_level, and state the
-      limitation inside detailed_analysis. Do not abstain.
-    - If Dataset B covers fewer than one full session: derive the best available
-      approximation for vwap, vwap_upper_1sd, vwap_lower_1sd, opening_range_high,
-      and opening_range_low, then note the limitation in intraday_observation.
-    - Tone: professional, decisive, evidence-based. No forward-looking guarantees,
-      marketing language, or disclaimers.
-      
-    
+    For every bilingual field (trend_sentiment, summary_conclusion, detailed_analysis,
+    volume_observation, price_action_observation, intraday_observation,
+    intraday_trend_alignment, risk_level), verify ALL three:
+      ✓ Value contains exactly one \n separating Chinese from English
+      ✓ The portion before \n contains at least one CJK character (U+4E00–U+9FFF)
+      ✓ The portion after \n contains at least three ASCII letters and no CJK characters
