@@ -82,9 +82,9 @@ public class ReportService {
                 return Map.of("status", "no_price_data", "ticker", ticker);
             }
 
-            Instant tenDaysAgo = Instant.now().minus(1, ChronoUnit.DAYS);
+            Instant daysAgo = Instant.now().minus(1, ChronoUnit.DAYS);
             List<PriceQuote5Min> prices5Min = priceQuote5MinRepository
-                    .findBySymbolAndTimestampBetweenOrderByTimestampAsc(ticker, tenDaysAgo, Instant.now());
+                    .findBySymbolAndTimestampBetweenOrderByTimestampAsc(ticker, daysAgo, Instant.now());
 
             String prompt = buildPrompt(ticker, dailyPrices, prices5Min);
             String raw = ollamaService.generateAnalysis(prompt);
