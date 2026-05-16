@@ -193,6 +193,7 @@ ollama:
       - Optimal entry zone from 5-minute structure
         (e.g., "entry on VWAP reclaim" or "entry on opening-range breakout above X.XX")
       - Position call: Add / Hold / Trim / Exit
+      - must include price for each Position call
 
     detailed_analysis — 2–3 paragraphs per language (Chinese block first, then English block).
     Must cover all six points:
@@ -206,6 +207,7 @@ ollama:
       5. Intraday-to-daily confluence: does the most recent session's 5-min trend,
          VWAP position, and opening range outcome confirm or undermine the daily thesis?
       6. Invalidation: precise price level citing the daily or intraday structure that anchors it
+      7. must include price for each position
 
     volume_observation — one sentence per language:
       Latest daily volume vs. 20-day volume SMA (percent difference) and any
