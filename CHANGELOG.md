@@ -1,3 +1,10 @@
+## [0.4.11](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.10...v0.4.11) (2026-05-16)
+
+
+### Bug Fixes
+
+* update description of null value for response object ([9c33cb4](https://github.com/lookmail88/xg-tsla-svc/commit/9c33cb48267967b67f55a221be92b4d98843f6bf))
+
 ## [0.4.10](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.9...v0.4.10) (2026-05-16)
 
 
