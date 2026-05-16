@@ -28,25 +28,25 @@ public class StockAnalysisReport {
     @Column(name = "summary_conclusion", nullable = false, columnDefinition = "TEXT")
     private String summaryConclusion;
 
-    @Column(name = "support_level_primary", nullable = false, columnDefinition = "NUMERIC(12,4) DEFAULT 0")
+    @Column(name = "support_level_primary", nullable = false, columnDefinition = "NUMERIC(12,4)")
     private BigDecimal supportLevelPrimary;
 
-    @Column(name = "support_level_secondary", nullable = false, columnDefinition = "NUMERIC(12,4) DEFAULT 0")
+    @Column(name = "support_level_secondary", nullable = false, columnDefinition = "NUMERIC(12,4)")
     private BigDecimal supportLevelSecondary;
 
-    @Column(name = "resistance_level_primary", nullable = false, columnDefinition = "NUMERIC(12,4) DEFAULT 0")
+    @Column(name = "resistance_level_primary", nullable = false, columnDefinition = "NUMERIC(12,4)")
     private BigDecimal resistanceLevelPrimary;
 
-    @Column(name = "resistance_level_secondary", nullable = false, columnDefinition = "NUMERIC(12,4) DEFAULT 0")
+    @Column(name = "resistance_level_secondary", nullable = false, columnDefinition = "NUMERIC(12,4)")
     private BigDecimal resistanceLevelSecondary;
 
-    @Column(name = "detailed_analysis", columnDefinition = "TEXT")
+    @Column(name = "detailed_analysis", nullable = false, columnDefinition = "TEXT")
     private String detailedAnalysis;
 
-    @Column(name = "volume_observation", columnDefinition = "TEXT")
+    @Column(name = "volume_observation", nullable = false, columnDefinition = "TEXT")
     private String volumeObservation;
 
-    @Column(name = "price_action_observation", columnDefinition = "TEXT")
+    @Column(name = "price_action_observation",nullable = false, columnDefinition = "TEXT")
     private String priceActionObservation;
 
     @Column(name = "risk_level" )
