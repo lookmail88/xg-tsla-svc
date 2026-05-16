@@ -1,3 +1,10 @@
+## [0.4.9](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.8...v0.4.9) (2026-05-14)
+
+
+### Bug Fixes
+
+* add default value of report ([774f247](https://github.com/lookmail88/xg-tsla-svc/commit/774f247bca0f26507852f5e9192d6fd25ee7aa9e))
+
 ## [0.4.8](https://github.com/lookmail88/xg-tsla-svc/compare/v0.4.7...v0.4.8) (2026-05-13)
 
 
