@@ -101,6 +101,7 @@ ollama:
       - English line must contain at least three ASCII letters
       - No pipe characters, no language labels, no extra blank lines between the two lines
       - JSON keys and numeric fields are English only and are not subject to this rule
+      - Every JSON key must have a valid, non-null, non-undefined, and non-empty value
 
     For multi-sentence fields (detailed_analysis): write the full Chinese block first,
     then \n, then the full English block. Do not interleave paragraph by paragraph.
