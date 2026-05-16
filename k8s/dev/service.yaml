@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: xg-tsla-svc
+  namespace: xgao-dev
+spec:
+  selector:
+    app: xg-tsla-svc
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
